@@ -61,10 +61,11 @@
                 </div>
             </td>
             <td>
-                
+                <form action="/cart" name="submit2" class="col-2" method="post" >
+                    {% csrf_token %}
                     <button id="{{pr.id}}" class="plus btn-primary" type="submit">+</button>
-                
-                    <input type="text" value="{{pr|cart_quantity:dict}}">
+                </form>
+                    <input type="number" id="quantity" value="{{pr|cart_quantity:dict}}">
                     <form action="/cart" name="submit2" class="col-2" method="post" >
                         {% csrf_token %}
                         <button id="{{pr.id}}" class="minus btn-danger" type="submit">-</button>
@@ -123,33 +124,39 @@
 
 <script>
     $('.plus').click(function(e){
-        e.preventDefault;
+        e.preventDefault();
         cartt=JSON.parse(localStorage.getItem('cart'));
         console.log(cartt)
         var idstr=this.id.toString();
         cartt[idstr]=cartt[idstr]+1;
-        console.log(JSON.stringify(cartt))
-        console.log(typeof(JSON.stringify(cartt)))
+        localStorage.setItem('cart',JSON.stringify(cartt))
         $.ajax({
             type:"POST",
             url:"http://127.0.0.1:8000/cart",
             data:{
-                prodd:JSON.stringify(cartt),
+                prodd:localStorage.getItem('cart'),
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+            },
+            success:function(){
+                location.href = "/cart"
             }
         });
     });
     $('.minus').click(function(e){
-        e.preventDefault;
+        e.preventDefault();
         cartt=JSON.parse(localStorage.getItem('cart'));
         var idstr=this.id.toString();
         cartt[idstr]=cartt[idstr]-1;
+        localStorage.setItem('cart',JSON.stringify(cartt))
         $.ajax({
             type:"POST",
             url:"http://127.0.0.1:8000/cart",
             data:{
-                prodd:JSON.stringify(cartt),
+                prodd:localStorage.getItem('cart'),
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+            },
+            success:function(){
+                location.href = "/cart"
             }
         });
     });

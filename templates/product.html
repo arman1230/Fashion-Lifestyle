@@ -197,10 +197,6 @@
             }
             //updatecart(cart,idstr);
             localStorage.setItem('cart',JSON.stringify(cart));
-            var str="";
-            for (var key in cart) str=str+key+" ";
-            console.log(str)
-
             $.ajax({
                 type:"POST",
                 url:"http://127.0.0.1:8000/cart",
