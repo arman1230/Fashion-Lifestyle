@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Ecommerce Product Website - Easy Tutorials</title>
+    
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'p1.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <!--navbar-->
+    <nav class="navbar">
+        <div class="nav">
+            <img src="{{logo.image.url}}" class="brand-logo" alt="">
+            <div class="nav-items">
+                <div class="search">
+                    <input type="text" class="search-box" style="padding:0px;" placeholder="Search Products Brands & More" required>
+                    <button type="search-btn" class="search-btn">Search</button>
+                </div>
+                <a href="#"><img src="{{user.image.url}}"></a> 
+                <a href="#"><img src="{{cart.image.url}}"></a>
+            </div>
+        </div>
+        <ul class="links-container">
+            <li class="link-items"><a class="links" href="#" >Home</a></li>
+            <li class="link-items"><a class="links" href="#">Men</a></li>
+            <li class="link-items"><a class="links" href="#">Women</a></li>
+            <li class="link-items"><a class="links" href="#">Kids</a></li>
+            <li class="link-items"><a class="links" href="#">Home & Living</a></li>
+            <li class="link-items"><a class="links" href="#">Beauty</a></li>
+        </ul>
+
+
+    <div class="hero">
+        <div class="row">
+            <div class="col">
+
+                <div class="slider">
+                    <div class="product">
+
+                        <img src="{{prod.subimg.s1.url}}" alt="" onclick="clickme(this)">
+                        <img src="{{prod.subimg.s2.url}}" alt="" onclick="clickme(this)">
+                        <img src="{{prod.subimg.s3.url}}" alt="" onclick="clickme(this)">
+                        <img src="{{prod.image.url}}" alt="" onclick="clickme(this)">
+
+                    </div>
+                    <div class="preview">
+                        <img src="{{prod.image.url}}" id="imagebox" alt="">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col">
+
+                <div class="content">
+                    <p class="brand">{{prod.Brand}}</p>
+                    <h2>{{prod.name}}</h2>
+                    
+                    <div class="rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                        
+                    </div>
+                    
+                    <p class="price">{{prod.Brand}}</p>
+                    <p class="desc">{{prod.longdesc}}</p>
+                    <span class="Price">{{prod.dprice}}</span><span class="actual-price">{{prod.aprice}}</span>
+                    <p class="size">Size: <select name="size">
+
+                            <option value="select size">select size</option>
+                            <option value="small">small</option>
+                            <option value="medium">medium</option>
+                            <option value="large">large</option>
+
+                        </select></p>
+                    <p class="quant">Quantity: <input type="text" value="1"></p>
+                    <form id="cartSubmit">
+                        {% csrf_token %}
+                        <button id="{{prod.id}}" type="submit" class="cart">
+                            <i class="fa fa-shopping-cart"></i>
+                            Add to cart</button>
+                        </form>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="related">
+            <h2>related items</h2>
+            <div class="row">
+                {% for pr in prod1 %}
+                {% if forloop.counter <= 4 %}
+                
+                <div class="columns">
+                    <div class="items">
+                        <a href="{% url 'productdata' pr.id %}">
+                        <img src="{{pr.image.url}}" alt="">
+                        </a>
+                        <div class="details">
+                            <p>{{pr.name}}</p>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-o"></i>
+                            </div>
+
+                            <p>{{pr.dprice}}</p>
+
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+               
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!--footer-->
+    <footer>
+        <div class="footer-content">
+            <img src="{{logo.image.url}}" class="logo" alt="">
+
+            <div class="footer-ul-container">
+                <ul class="category">
+                    <li><a href="#" class="footer-links">Men</a></li>
+                    <li><a href="#" class="footer-links">Women</a></li>
+                    <li><a href="#" class="footer-links">Kids</a></li>
+                    <li><a href="#" class="footer-links">Home & Living</a></li>
+                    <li><a href="#" class="footer-links">Beauty</a></li>
+                </ul>
+
+            </div>
+        </div>
+
+        <p class="footer-title">About Company</p>
+        <p class="info">ONLINE SHOPPING MADE EASY </p>
+        <p class="info">If you would like to experience the best of online shopping for men, women and kids in India, you are at the right place. Myntra is the ultimate destination for fashion and lifestyle, being host to a wide array of merchandise including clothing, footwear, accessories, jewellery, personal care products and more. It is time to redefine your style statement with our treasure-trove of trendy items. Our online store brings you the latest in designer products straight out of fashion houses. You can shop online at Myntra from the comfort of your home and get your favourites delivered right to your doorstep.</p>
+        <p class="info">Email: Fashion&Lifestyle @gmail.com</p>
+        <p class="info">Telephone - 02287790456</p>
+        <div class="footer-social-container">
+            <div>
+                <a href="#" class="social-links">Terms & Services</a>
+                <a href="#" class="social-links">Privacy page</a>
+            </div>
+
+            <div>
+                <a href="#" class="social-links">Instagram</a>
+                <a href="#" class="social-links">Facebook</a>
+                <a href="#" class="social-links">Twitter</a>
+            </div>
+        </div>
+        <p class="footer-copy"> © 2022 Fashion & Lifestyle</p>
+    </footer>
+
+
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+
+    <script>
+        function clickme(smallImg) {
+
+            var fullImg = document.getElementById("imagebox");
+            fullImg.src = smallImg.src;
+
+        }
+        // find out the cart items from localstorage
+        if(localStorage.getItem('cart')==null){
+            var cart={};
+        }
+        else{
+            cart=JSON.parse(localStorage.getItem('cart'));
+        }
+        // if the cart button is clciked then increment the item
+        $('.cart').click(function(e){
+            e.preventDefault();
+            var idstr=this.id.toString();
+            console.log(idstr);
+            if(cart[idstr] != undefined){
+                cart[idstr] = cart[idstr] + 1; 
+            }
+            else{
+                cart[idstr] = 1;
+            }
+            //updatecart(cart,idstr);
+            localStorage.setItem('cart',JSON.stringify(cart));
+            var str="";
+            for (var key in cart) str=str+key+" ";
+            console.log(str)
+
+            $.ajax({
+                type:"POST",
+                url:"http://127.0.0.1:8000/cart",
+                data:{
+                    prodd:JSON.stringify(cart),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                },
+                success:function(){
+                    location.href = "/cart"
+                }
+            });
+        });
+
+        //function updatecart(cart,idstr){
+            //document.getElementById("cartpr"+idstr).innerHTML= "<button id='minus"+idstr+"' class='btn'>-</button><span id='val"+idstr+"'>"+cart["pr"+idstr]+"</span><button id='plus"+idstr+"' class='btn'>+</button>";
+       // }
+            
+           
+
+    </script>
+
+
+
+</body>
+
+</html>

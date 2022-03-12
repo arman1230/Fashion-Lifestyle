@@ -1,0 +1,160 @@
+{% load static %}
+{% load cart %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-Compatitle" content="IE=edge">
+        <meta name="viewpoint" content="width=device-width,initial-sacle=1,0">
+        <title>Fasion & Lifestyle</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="{% static 'cart.css' %}">    
+        
+    </head>
+
+    <body>
+        <!--navigation bar-->
+        <nav class="navbar">
+            <div class="nav">
+                <img src="{{logo.image.url}}" class="brand-logo" alt="">
+                <div class="nav-items">
+                    <div class="search">
+                        <input type="text" class="search-box" size="30" placeholder="Search Products Brands & More" required>
+                        <button type="search-btn" class="search-btn">Search</button>
+                    </div>
+                
+                </div>
+            </div>
+            <ul class="links-container">
+                <li class="link-items"><a class="links" href="/" >Home</a></li>
+                <li class="link-items"><a class="links" href="/mens">Men</a></li>
+                <li class="link-items"><a class="links" href="/womens">Women</a></li>
+                <li class="link-items"><a class="links" href="/kids">Kids</a></li>
+                <li class="link-items"><a class="links" href="/appliance">Home & Living</a></li>
+                <li class="link-items"><a class="links" href="/beauty">Beauty</a></li>
+            </ul>
+        </nav>
+
+<div class="small-container cart-page">
+    <div class="cart-inner">
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+        {% for pr in object %}
+        <tr>
+            <td>
+                <div class="cart-info">
+                    <img src="{{pr.image.url}}" alt="">
+                    <div>
+                        <p>{{pr.name}}</p>
+                        <small>{{pr.dprice}}</small>
+                        <br>
+                        <a href="">Remove</a>
+                    </div>
+                </div>
+            </td>
+            <td>
+                
+                    <button id="{{pr.id}}" class="plus btn-primary" type="submit">+</button>
+                
+                    <input type="text" value="{{pr|cart_quantity:dict}}">
+                    <form action="/cart" name="submit2" class="col-2" method="post" >
+                        {% csrf_token %}
+                        <button id="{{pr.id}}" class="minus btn-danger" type="submit">-</button>
+                    </form>
+            </td>
+            <td>{{pr.dprice}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="cart-submit">
+    <button class="button-77" role="button">Continue to shopping</button>
+    <button class="button-77" role="button">Proceed to buy</button>
+</div>
+</div>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <img src="{{logo.image.url}}" class="logo" alt="">
+
+        <div class="footer-ul-container">
+            <ul class="category">
+                <li><a href="/mens" class="footer-links">Men</a></li>
+                <li><a href="/womens" class="footer-links">Women</a></li>
+                <li><a href="/kids" class="footer-links">Kids</a></li>
+                <li><a href="/appliance" class="footer-links">Home & Living</a></li>
+                <li><a href="/beauty" class="footer-links">Beauty</a></li>
+            </ul>
+
+        </div>
+    </div>
+
+    <p class="footer-title">About Company</p>
+    <p class="info">ONLINE SHOPPING MADE EASY </p>
+    <p class="info">If you would like to experience the best of online shopping for men, women and kids in India, you are at the right place. Myntra is the ultimate destination for fashion and lifestyle, being host to a wide array of merchandise including clothing, footwear, accessories, jewellery, personal care products and more. It is time to redefine your style statement with our treasure-trove of trendy items. Our online store brings you the latest in designer products straight out of fashion houses. You can shop online at Myntra from the comfort of your home and get your favourites delivered right to your doorstep.</p>
+    <p class="info">Email: Fashion&Lifestyle @gmail.com</p>
+    <p class="info">Telephone - 02287790456</p>
+    <div class="footer-social-container">
+        <div>
+            <a href="#" class="social-links">Terms & Services</a>
+            <a href="#" class="social-links">Privacy page</a>
+        </div>
+
+        <div>
+            <a href="#" class="social-links">Instagram</a>
+            <a href="#" class="social-links">Facebook</a>
+            <a href="#" class="social-links">Twitter</a>
+        </div>
+        <button class="cart" id="pr1">pr1</button>
+        <button class="cart" id="pr2">pr2</button>
+    </div>
+    <p class="footer-copy"> © 2022 Fashion & Lifestyle</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    $('.plus').click(function(e){
+        e.preventDefault;
+        cartt=JSON.parse(localStorage.getItem('cart'));
+        console.log(cartt)
+        var idstr=this.id.toString();
+        cartt[idstr]=cartt[idstr]+1;
+        console.log(JSON.stringify(cartt))
+        console.log(typeof(JSON.stringify(cartt)))
+        $.ajax({
+            type:"POST",
+            url:"http://127.0.0.1:8000/cart",
+            data:{
+                prodd:JSON.stringify(cartt),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+            }
+        });
+    });
+    $('.minus').click(function(e){
+        e.preventDefault;
+        cartt=JSON.parse(localStorage.getItem('cart'));
+        var idstr=this.id.toString();
+        cartt[idstr]=cartt[idstr]-1;
+        $.ajax({
+            type:"POST",
+            url:"http://127.0.0.1:8000/cart",
+            data:{
+                prodd:JSON.stringify(cartt),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+            }
+        });
+    });
+</script>
+
+</body>
+
+</html>   
