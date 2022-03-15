@@ -53,10 +53,14 @@
                 <div class="cart-info">
                     <img src="{{pr.image.url}}" alt="">
                     <div>
-                        <p>{{pr.name}}</p>
-                        <small>{{pr.dprice}}</small>
+                        <p class="name">{{pr.name}}</p>
+                        <p class="desc">{{pr.shortdesc}}</p>
+                        <p class="prc">{{pr.dprice}}</p>
                         <br>
-                        <a href="">Remove</a>
+                        <form action="/cart" class="col-2" method="post" >
+                            {% csrf_token %}
+                        <button id="{{pr.id}}" class="button-42" role="button">Remove</button>
+                    </form>
                     </div>
                 </div>
             </td>
@@ -71,13 +75,18 @@
                         <button id="{{pr.id}}" class="minus btn-danger" type="submit">-</button>
                     </form>
             </td>
-            <td>{{pr.dprice}}</td>
+            <td>
+                <p class="prc"><i class="fa fa-inr"></i>{{pr|Calc:dict}}</p>
+            </td>
         </tr>
         {% endfor %}
     </table>
     <div class="cart-submit">
-    <button class="button-77" role="button">Continue to shopping</button>
-    <button class="button-77" role="button">Proceed to buy</button>
+    <a href="/"> <button class="button-77" role="button">Continue to shopping</button></a>
+    <form action="/checkout" method="post" >
+        {% csrf_token %}
+   <button class="button-78" role="button">Proceed to buy</button>
+    </form>
 </div>
 </div>
 </div>
@@ -120,7 +129,7 @@
     <p class="footer-copy"> © 2022 Fashion & Lifestyle</p>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
 <script>
     $('.plus').click(function(e){
@@ -158,6 +167,38 @@
             },
             success:function(){
                 location.href = "/cart"
+            }
+        });
+    });
+    $('.button-42').click(function(e){
+        e.preventDefault();
+        cartt=JSON.parse(localStorage.getItem('cart'));
+        var idstr=this.id.toString();
+        delete cartt[idstr];
+        localStorage.setItem('cart',JSON.stringify(cartt))
+        $.ajax({
+            type:"POST",
+            url:"http://127.0.0.1:8000/cart",
+            data:{
+                prodd:localStorage.getItem('cart'),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+            },
+            success:function(){
+                location.href = "/cart"
+            }
+        });
+    });
+    $('.button-78').click(function(e){
+        e.preventDefault();
+        $.ajax({
+            type:"POST",
+            url:"http://127.0.0.1:8000/checkout",
+            data:{
+                prodd:localStorage.getItem('cart'),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+            },
+            success:function(){
+                location.href = "/checkout"
             }
         });
     });

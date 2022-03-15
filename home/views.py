@@ -180,6 +180,17 @@ def cart(request):
         context={'logo':log,'user':user,'cart':cart,'object':objects,'dict':dict}
         
     return render(request,'cart.html',context)
+
+def checkout(request):
+    if request.method == "POST":
+        global context
+        dict1=json.loads(request.POST.get('prodd'))
+        print(dict)
+        ldict=list(map(int,dict.keys()))
+        count=len(ldict)
+        objects=product.objects.filter(pk__in=ldict)
+        context={'object':objects,'dict':dict,'count':count}
+    return render(request,'checkout.html',context)
     
 
 def productpage(request,id):
