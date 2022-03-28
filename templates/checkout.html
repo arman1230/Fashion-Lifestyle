@@ -116,8 +116,8 @@ span.price {
 <div class="row">
   <div class="col-75">
     <div class="container">
-      <form action="/action_page.php">
-      
+      <form action="{% url 'payment' %}" method="post">
+      {% csrf_token %}
         <div class="row">
           <div class="col-50">
             <h3>Billing Address</h3>
@@ -184,7 +184,7 @@ span.price {
         <p><a href="#">{{pr.name}}</a> <span class="price">{{pr|Calc:dict}}</span></p>
       {% endfor %}
       <hr>
-      <p>Total <span class="price" style="color:black"><b>$30</b></span></p>
+      <p>Total <span class="price" style="color:black"><b>{{sum}}</b></span></p>
     </div>
   </div>
 </div>

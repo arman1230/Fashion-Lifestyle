@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <!-- Coding By CodingNepal - youtube.com/codingnepal -->
 <html lang="en">
@@ -5,12 +6,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Form validation in HTML & CSS</title>
-  <link rel="stylesheet" href="static/login.css">
+  <link rel="stylesheet" href="{% static 'login.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
 </head>
 <body>
   <div class="wrapper">
     <header>Login Form</header>
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+      <strong>Message</strong>{{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
     <form action="" method="post">
       
       {% csrf_token %}
@@ -24,19 +31,19 @@
       </div>
       <div class="field password">
         <div class="input-area">
-          <input type="password" name="pswd" placeholder="Password" required>
+          <input type="password" name="pswd" placeholder="Password" minlength="8" pattern="[a-z \@ 0-9]+" required>
           <i class="icon fas fa-lock"></i>
           <i class="error error-icon fas fa-exclamation-circle"></i>
         </div>
         <div class="error error-txt">Password can't be blank</div>
       </div>
       <div class="pass-txt"><a href="#">Forgot password?</a></div>
-      <input type="submit" value="Login">
+      <input type="submit" value="Login" >
     </form>
     <div class="sign-txt">Not yet member? <a href="/signin">Signup now</a></div>
   </div>
 
-  <script src="static/script.js"></script>
+  <script src="{% static 'script.js' %}"></script>
 
 </body>
 </html>

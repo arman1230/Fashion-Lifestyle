@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,7 +11,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-        <link rel="stylesheet" href="static/home.css">    
+        <link rel="stylesheet" href="{% static 'home.css' %}">    
         
     </head>
 
@@ -26,6 +27,7 @@
                     </div>
                     <a href="#"><img src="{{user.image.url}}"></a> 
                     <a href="{% url 'cart' %}"><img src="{{cart.image.url}}"></a>
+                    <button class="logout"><a href="/logout" style="margin-left:0px;color:black;">Logout</a></button> 
                 </div>
             </div>
             <ul class="links-container">
@@ -36,16 +38,27 @@
                 <li class="link-items"><a class="links" href="/appliance">Home & Living</a></li>
                 <li class="link-items"><a class="links" href="/beauty">Beauty</a></li>
             </ul>
+           
         </nav>
+        {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+      <strong>Message</strong>{{message}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
 
-            <header class="hero-section" style="
+            {% comment %} <header class="hero-section" style="
             flex: 0 0 auto;
             width: 100%;
             height: calc(100vh - 220px);
             background-size: cover;
             display: flex;
             justify-content: center;
-            align-items: center;">
+            align-items: center;
+            @media only screen and (max-width: 480px) {
+               width:100px;
+              };"> {% endcomment %}
+              <header class="hero-section">
             <div class="container"><img src="{{carousel.image.url}}" alt=""></div>
             </header>
 

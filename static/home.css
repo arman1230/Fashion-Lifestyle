@@ -101,13 +101,28 @@
 .hero-section{
     width: 100%;
     height: calc(100vh - 120px);
-    background-image: url("D:\SEM6\Project\Ecommerce\media\shop\header.png");
     background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
+@media only screen and (max-width: 480px) {
+    img{
+        width: 10px;
+    }
+   }
+   .logout {
+    transition-duration: 0.4s;
+    color: #0e0e0e;
+    border-radius: 15px;
+    padding: 10px;
+    margin-left: 20px;
+  }
+  
+.logout:hover {
+    background-color: red;/* Green */
+    color: white;
+  }
 /*product*/
 .product{
     position:relative;

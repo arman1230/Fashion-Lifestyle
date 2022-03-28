@@ -3,11 +3,14 @@ import http
 from http.client import HTTPResponse
 from math import prod
 from pickle import GET
+import re
 from unicodedata import category, name
+from django.contrib.auth.models import User
+from django.contrib.auth import login,logout,authenticate
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import SubCategories, categories, customer,product, Shubimage,templates
+from .models import SubCategories, categories, customer, order,product, Shubimage,templates
 from datetime import datetime
 import random
 import json
@@ -15,6 +18,8 @@ import json
 # Create your views here.
 #@login_required(login_url="/login")
 def index(request):
+    if request.user.is_anonymous:
+        return redirect("/login")
     log=templates.objects.get(pk=1)
     user=templates.objects.get(pk=2)
     womens=templates.objects.get(pk=3)
@@ -33,30 +38,48 @@ def index(request):
     'carousel':carousel,'cart':cart,'home':home,'shoe':shoe,'prodshirt':prodshirt,
     'lshoes':lshoes,'lshirt':lshirt})
 
-def login(request):
+def user_login(request):
     if request.method=="POST":
         uname=request.POST.get("uname")
         pswd=request.POST.get("pswd")
-        cust=customer.objects.get(username=uname)
-        if cust.password == pswd:
+        user=authenticate(request,username=uname,password=pswd)
+        if user is not None:
+            login(request,user)
+            messages.success(request,"You successfully logged in")
             return redirect("/")
+        else:
+            messages.warning(request,"   Your creadentials are not matched")
+        # cust=customer.objects.get(username=uname)
+        # if cust.password == pswd:
+        #     return redirect("/")
     return render(request,'login.html')
+
+def user_logout(request):
+    logout(request)
+    return redirect("/login")
 def signin(request):
     if request.method=="POST":
         fname=request.POST.get("fname")
         lname=request.POST.get("lname")
         email=request.POST.get("email")
-        phone=request.POST.get("phone")
-        dob=request.POST.get("dob")
-        gender=request.POST.get("gender")
-        address=request.POST.get("tarea")
-        pcode=request.POST.get("pcode")
+        # phone=request.POST.get("phone")
+        # dob=request.POST.get("dob")
+        # gender=request.POST.get("gender")
+        # address=request.POST.get("tarea")
+        # pcode=request.POST.get("pcode")
         uname=request.POST.get("uname")
-        pswd=request.POST.get("pswd")
-        print(fname,lname,email,phone,dob,gender,address,pcode,uname,pswd)
-        cust = customer(firstname=fname,lastname=lname,email=email,phone=phone,dob=dob,gender=gender,address=address,postal_code=pcode,username=uname,password=pswd,date_created=datetime.today())
-        cust.save()
-        return redirect("/")
+        pswd=request.POST.get("pass")
+        pswd1=request.POST.get("pass1")
+        print(fname,lname,uname,pswd,pswd1)
+        if(pswd==pswd1 and uname!="" and pswd!="" and fname!="" and lname!="" and email!=""):
+            myuser=User.objects.create_user(uname,email,pswd)
+            myuser.first_name=fname
+            myuser.last_name=lname
+            myuser.save()
+            return redirect("/")
+        # cust = customer(firstname=fname,lastname=lname,email=email,phone=phone,dob=dob,gender=gender,address=address,postal_code=pcode,username=uname,password=pswd,date_created=datetime.today())
+        # cust.save()
+            
             
     return render(request,'sign1.html')
 
@@ -184,12 +207,26 @@ def cart(request):
 def checkout(request):
     if request.method == "POST":
         global context
-        dict1=json.loads(request.POST.get('prodd'))
-        print(dict)
+        dict=json.loads(request.POST.get('prodd'))
         ldict=list(map(int,dict.keys()))
         count=len(ldict)
         objects=product.objects.filter(pk__in=ldict)
-        context={'object':objects,'dict':dict,'count':count}
+        tcount=list(product.objects.filter(pk__in=ldict).values_list('dprice', flat=True)) # flat=True will remove the tuples and return the list  
+        values=[]
+        for i in tcount:
+            val=int(i[3:])
+            values.append(val)
+        print(values)
+        counts=[]
+        for i in ldict:
+            val=dict[str(i)]
+            counts.append(val)
+        print(counts)
+        sum=0
+        for i in range(len(ldict)):
+            sum=sum+(values[i]*counts[i])
+        print(sum)
+        context={'object':objects,'dict':dict,'count':count,'sum':sum}
     return render(request,'checkout.html',context)
     
 
@@ -203,3 +240,17 @@ def productpage(request,id):
         tmp=list(prod)[:]
         random.shuffle(tmp)
     return render(request,"product.html",{"prod":pi,'logo':log,'user':user,'cart':cart,'prod1':tmp})
+
+def payment(request):
+    if request.method == "POST":
+        fname=request.POST.get("firstname")
+        state=request.POST.get("state")
+        email=request.POST.get("email")
+        city=request.POST.get("city")
+        add=request.POST.get("address")
+        zip=request.POST.get("zip")
+        ord = order(fullname=fname,email=email,address=add,city=city,Zip=zip,state=state,order_date=datetime.today())
+        ord.save()
+        if order is not None:
+            return redirect("/")
+    return HTTPResponse(request,"the order had been placed successfully")

@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from django.contrib.messages import constants as messages
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +28,7 @@ SECRET_KEY = 'django-insecure-(oaisv86s7q02o(o2$!tul#a1ddgz$8#nqhd2xk0^$7-545kpe
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','fashionandlifestyle.com']
 
 
 # Application definition
@@ -146,3 +148,7 @@ MEDIA_URL = '/media/'
 # Path where media is stored
 MEDIA_ROOT = BASE_DIR / 'media'
 
+
+MESSAGE_TAGS = {
+    messages.ERROR:"danger"
+}
